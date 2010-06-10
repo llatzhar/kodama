@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Bookmarks | kodama</title>
+</head>
+<body>
+	<h1>Bookmarks</h1>
+	<table cellspacing="0">
+		<th>
+			<td>title</td>
+			<td>url</td>
+			<td>tag</td>
+			<td>note</td>
+			<td>user</td>
+		</th>
+	<% records.each do |r| %>
+		<tr>
+			<td></td>
+			<td><%= r[:title] %></td>
+			<td><%= r[:url] %></td>
+			<td><%= r[:tag] %></td>
+			<td><%= r[:note] %></td>
+			<td><%= r[:user_id] %></td>
+			<td><a href="/<%= r[:id] %>/edit">edit</a></td>
+			<td><a href="/<%= r[:id] %>/delete">delete</a></td>
+		</tr>
+	<% end %>
+	</table>
+	<p><a href="/new">new</a></p>
+	</div>
+</body>
+</html>

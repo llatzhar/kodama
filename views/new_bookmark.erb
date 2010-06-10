@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>New Bookmark | kodama</title>
+</head>
+<body>
+	<h1>New Bookmark</h1>
+	<form method="post" action="/new">
+		<label>title</label>
+		<input type="text" name="title" value="<%= hints[:title] %>">
+		<label>url</label>
+		<input type="text" name="url" value="<%= hints[:url] %>">
+		<label>tag</label>
+		<input type="text" name="tag">
+		<label>note</label>
+		<input type="text" name="note" value="<%= hints[:note] %>">
+		<input type="submit" value="create">
+	</form>
+	<a href="/">back</a>
+</body>
+</html>
