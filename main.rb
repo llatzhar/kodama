@@ -14,7 +14,7 @@ end
 
 
 get '/' do
-   ds = DB[:bookmarks].limit(30)
+   ds = DB[:bookmarks].order(:id.desc).limit(30)
    
    records = []
    ds.each do |r|
@@ -43,7 +43,7 @@ post '/new' do
 end
 
 get '/rss' do
-   bookmarks = DB[:bookmarks].limit(30)
+   bookmarks = DB[:bookmarks].order(:id.desc).limit(30)
    
    rss = RSS::Maker.make("2.0") do |maker|
 
@@ -74,9 +74,11 @@ get '/users' do
       :records => DB[:users]
    }
 end
+
 get '/user/new' do
    erb :new_user
 end
+
 post '/user/new' do
    DB[:users].insert({
       :profile => params[:profile],
