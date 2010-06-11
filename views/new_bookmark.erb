@@ -7,15 +7,13 @@
 <body>
 	<h1>New Bookmark</h1>
 	<form method="post" action="/new">
-		<label>title</label>
-		<input type="text" name="title" value="<%= hints[:title] %>">
-		<label>url</label>
-		<input type="text" name="url" value="<%= hints[:url] %>">
-		<label>tag</label>
-		<input type="text" name="tag">
-		<label>note</label>
-		<input type="text" name="note" value="<%= hints[:note] %>">
-		<input type="submit" value="create">
+		<dl>
+		<dt>title <input type="text" name="title" value="<%= hints[:title] %>"></dt>
+		<dt>url <input type="text" name="url" value="<%= hints[:url] %>"></dt>
+		<dt>tag <input type="text" name="tag"></dt>
+		<dt>note<input type="text" name="note" value="<%= hints[:note] %>"></dt>
+		<dt><input type="submit" value="create"></dt>
+		</dl>
 	</form>
 	<a href="/">back</a>
 </body>

@@ -68,3 +68,20 @@ end
 get '/env' do
    ENV.inspect
 end
+
+get '/users' do
+   erb :users, :locals => {
+      :records => DB[:users]
+   }
+end
+get '/user/new' do
+   erb :new_user
+end
+post '/user/new' do
+   DB[:users].insert({
+      :profile => params[:profile],
+      :name => params[:name],
+      :password => params[:password],
+   })
+   redirect '/users'
+end
