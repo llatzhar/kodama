@@ -6,28 +6,18 @@
 </head>
 <body>
 	<h1>Bookmarks</h1>
-	<table cellspacing="0">
-		<th>
-			<td>title</td>
-			<td>url</td>
-			<td>tag</td>
-			<td>note</td>
-			<td>user</td>
-		</th>
+	<dl>
 	<% records.each do |r| %>
-		<tr>
-			<td></td>
-			<td><%= r[:title] %></td>
-			<td><%= r[:url] %></td>
-			<td><%= r[:tag] %></td>
-			<td><%= r[:note] %></td>
-			<td><%= r[:user_id] %></td>
-			<td><a href="/<%= r[:id] %>/edit">edit</a></td>
-			<td><a href="/<%= r[:id] %>/delete">delete</a></td>
-		</tr>
+		<dt><a href="<%= r[:url] %>"><%= r[:title] %></a></dt>
+			<dd>url: <%= r[:url] %></dd>
+			<dd>tag: <%= r[:tag] %></dd>
+			<dd>note: <%= r[:note] %></dd>
+			<dd>user: <%= r[:user_id] %></dd>
+			<dd><a href="/<%= r[:id] %>/edit">edit</a> | <a href="/<%= r[:id] %>/delete">delete</a></td>
+		</dt>
 	<% end %>
-	</table>
+	</dl>
 	<p><a href="/new">new</a></p>
-	</div>
+	<p><a href="/bookmarklet.html">bookmarklet</a></p>
 </body>
 </html>
