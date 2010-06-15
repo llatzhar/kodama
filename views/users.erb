@@ -2,29 +2,29 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-         <title>users</title>
+	<title>users</title>
 </head>
 <body>
-         <h1>users</h1>
+	<h1>users</h1>
 	<table cellspacing="0">
 		<th>
 			<td>id</td>
 			<td>profile</td>
 			<td>name</td>
-			<td>password</td>
+			<td>operation</td>
+			<td>operation</td>
 		</th>
 	<% records.each do |r| %>
-            <tr>
+		<tr>
 			<td><%= r[:id] %></td>
 			<td><%= r[:profile] %></td>
 			<td><%= r[:name] %></td>
-			<td><%= r[:password] %></td>
-            <td><a href="/user/<%= r[:id] %>/edit">edit</a></td>
-            <td><a href="/user/<%= r[:id] %>/delete">delete</a></td>
+			<td><a href="/user/<%= r[:id] %>/edit">edit</a></td>
+			<td><a href="/user/<%= r[:id] %>/delete">delete</a></td>
 		</tr>
 	<% end %>
 	</table>
-         <p><a href="/user/new">new</a></p>
+	<p><a href="/user/new">new</a></p>
 	</div>
 </body>
 </html>

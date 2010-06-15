@@ -52,7 +52,6 @@ get '/login' do
 end
 
 post '/login' do
-   p params
    if auth(params[:name], params[:password])
       session[:user] = params[:name]
       redirect '/'
@@ -122,5 +121,5 @@ post '/user/new' do
       :name => params[:name],
       :password => params[:password],
    })
-   redirect '/users'
+   redirect '/login'
 end
