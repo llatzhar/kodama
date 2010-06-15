@@ -79,23 +79,24 @@ post '/new' do
 end
 
 get '/rss' do
-   bookmarks = DB[:bookmarks].order(:id.desc).limit(30)
-   
    rss = RSS::Maker.make("2.0") do |maker|
 
-      maker.channel.about = "http://localhost:9292/"
+      maker.channel.about = "http://kodama.heroku.com/rss"
       maker.channel.title = "kodama"
       maker.channel.description = "New Arrivals for kodama."
-      maker.channel.link = "http://localhost:9292/"
+      maker.channel.link = "http://kodama.heroku.com/"
 
       maker.items.do_sort = true
-      
+      bookmarks = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:bookmarks__id.desc).limit(30)
       bookmarks.each do |bookmark|
          item = maker.items.new_item
          item.link = bookmark[:url]
+         item.authors.new_author do |author|
+            author.name = bookmark[:name]
+         end
          item.title = bookmark[:title]	#TODO escape
          #item.date = m.modified_at
-         item.description = bookmark[:notes]	#TODO escape
+         item.description = bookmark[:note]	#TODO escape
       end
    end
    rss.to_s
