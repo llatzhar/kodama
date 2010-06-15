@@ -36,7 +36,7 @@ helpers do
 end
 
 get '/' do
-   ds = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:id.desc).limit(30)
+   ds = DB[:bookmarks].left_outer_join(:users, :id => :user_id).reverse_order('users.id').limit(30)
    #ds.each do |r|
    #   p r
    #end
