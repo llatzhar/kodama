@@ -7,17 +7,22 @@
 <body>
 	<h1>Bookmarks</h1>
 	<dl>
+		<dt><a href="/login">login</a></dt>
+		<dt>you are <%= user[:name] %></dt>
+		<dt><a href="/user/new">new user</a></dt>
+	</dl>
+	<dl>
 	<% records.each do |r| %>
 		<dt><a href="<%= r[:url] %>"><%= r[:title] %></a></dt>
 			<dd>url: <%= r[:url] %></dd>
 			<dd>tag: <%= r[:tag] %></dd>
 			<dd>note: <%= r[:note] %></dd>
-			<dd>user: <%= r[:user_id] %></dd>
+			<dd>user: <%= r[:name] %></dd>
 			<dd><a href="/<%= r[:id] %>/edit">edit</a> | <a href="/<%= r[:id] %>/delete">delete</a></td>
 		</dt>
 	<% end %>
 	</dl>
-	<p><a href="/new">new</a></p>
+	<p><a href="/new">new bookmark</a></p>
 	<p><a href="/bookmarklet.html">bookmarklet</a></p>
 </body>
 </html>

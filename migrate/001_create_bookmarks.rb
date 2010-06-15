@@ -1,4 +1,4 @@
-class CreateBokmarks < Sequel::Migration
+class CreateBookmarks < Sequel::Migration
    def up
       create_table :bookmarks do
          primary_key :id

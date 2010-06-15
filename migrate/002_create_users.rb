@@ -6,6 +6,7 @@ class CreateUsers < Sequel::Migration
          String :name
          String :password
       end
+      DB[:users].insert(:profile => 'default user', :name => 'anonymous', :password => 'none')
    end
    def down
       drop_table :users

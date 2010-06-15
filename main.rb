@@ -3,6 +3,8 @@ require 'rubygems'
 require 'sinatra'
 require 'sequel'
 
+enable :sessions
+
 #$LOAD_PATH.unshift(File.dirname(__FILE__) + '/vendor/json_pure')
 #require 'json/pure'
 
@@ -12,17 +14,52 @@ configure do
    DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://bookmarks.db')
 end
 
+helpers do
+   def auth(user, pass)
+      ds = DB[:users].filter({:name => user} & {:password => pass})
+      (ds.count > 0)
+      #stop [ 401, 'Not authorized' ]
+   end
+   
+   def user_name(session)
+      user = {}
+      if session[:user] == nil
+         user[:name] = "anonymous"
+         user[:id] = 1
+      else
+         ds = DB[:users].first(:name => session[:user])
+         user[:name] = session[:user]
+         user[:id] = ds[:id] 
+     end
+      user
+   end
+end
 
 get '/' do
-   ds = DB[:bookmarks].order(:id.desc).limit(30)
-   
-   records = []
-   ds.each do |r|
-      puts "test: #{r[:title]}"
-   end
+   ds = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:id.desc).limit(30)
+   #ds.each do |r|
+   #   p r
+   #end
    erb :bookmarks, :locals => {
-      :records => ds
+      :records => ds,
+      :user => user_name(session)
    }
+end
+
+get '/login' do
+   session.clear
+   erb :login
+end
+
+post '/login' do
+   p params
+   if auth(params[:name], params[:password])
+      session[:user] = params[:name]
+      redirect '/'
+   else
+      session.clear
+      erb :login
+   end
 end
 
 get '/new' do
@@ -37,7 +74,7 @@ post '/new' do
       :url => params[:url],
       :tag => params[:tag],
       :note => params[:note],
-      :user_id => 0
+      :user_id => user_name(session)[:id]
    })
    redirect '/'
 end
