@@ -9,6 +9,8 @@ rackup config.ru
 * view all bookmarks
 get /
 get /all(login)
+get /page/1
+get /page/2
 
 * add bookmark
 ** form
@@ -18,11 +20,4 @@ get /new
 get /new
 
 * view my bookmarks
-
-[bookmarklet]
-javascript:x=document;
-a=encodeURIComponent(x.location.href);
-t=encodeURIComponent(x.title);
-d=encodeURIComponent(window.getSelection());
-location.href='http://localhost:9292/new?url='+a+'&title='+t+'&note='+d;
 

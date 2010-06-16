@@ -12,18 +12,27 @@
 		<dt>you are <%= user[:name] %></dt>
 		<dt><a href="/user/new">sign up</a></dt>
 	</dl>
-	<dl>
+	<div class="autopagerize_page_element">
 	<% records.each do |r| %>
-		<dt><a href="<%= r[:url] %>"><%= r[:title] %></a></dt>
-			<dd>url: <%= r[:url] %></dd>
-			<dd>tag: <%= r[:tag] %></dd>
-			<dd>note: <%= r[:note] %></dd>
-			<dd>user: <%= r[:name] %></dd>
-			<dd><a href="/<%= r[:id] %>/edit">edit</a> | <a href="/<%= r[:id] %>/delete">delete</a></td>
-		</dt>
+		<div class="xforkentry">
+			<div><a class="taggedlink" href="<%= r[:url] %>"><%= r[:title] %></a></div>
+			<div class="description">url: <%= r[:url] %></div>
+			<div class="meta">tag: <%= r[:tag] %></div>
+			<div class="description">note: <%= r[:note] %></div>
+			<div class="description">user: <%= r[:name] %></div>
+			<div><a href="/<%= r[:id] %>/edit">edit</a> | <a href="/<%= r[:id] %>/delete">delete</a></div>
+		</div>
 	<% end %>
-	</dl>
-	<p><a href="/new">new bookmark</a></p>
-	<p><a href="/bookmarklet.html">bookmarklet</a></p>
+	</div>
+	<div class="autopagerize_insert_before">
+		<% if page[:prev] != 0 %>
+			<p><a href="/" rel="prev">prev</a></p>
+		<% end %>
+		<% if page[:next] != 0 %>
+			<p><a href="/page/<%= page[:next] %>" rel="next">next</a></p>
+		<% end %>
+		<p><a href="/new">new bookmark</a></p>
+		<p><a href="/bookmarklet.html">bookmarklet</a></p>
+	</div>
 </body>
 </html>

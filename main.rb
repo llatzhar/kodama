@@ -12,6 +12,7 @@ configure do
    # TIP:  You can get you database information
    #       from ENV['DATABASE_URI'] (see /env route below)
    DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://bookmarks.db')
+   Sequel.extension(:pagination)
 end
 
 helpers do
@@ -33,16 +34,47 @@ helpers do
      end
       user
    end
+   
+   def pagenation(dataset, current)
+      page = {:prev => 0, :next => 0}
+      if !dataset.first_page?
+         page[:prev] = current - 1
+      end
+      if !dataset.last_page?
+         page[:next] = current + 1
+      end
+      page
+   end
 end
 
 get '/' do
-   ds = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:bookmarks__id.desc).limit(30)
+   ds = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(1, 5)
    #ds.each do |r|
    #   p r
    #end
    erb :bookmarks, :locals => {
       :records => ds,
-      :user => user_name(session)
+      :user => user_name(session),
+      :page => pagenation(ds, 1)
+   }
+end
+
+get '/page/:page' do |num|
+   ds = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(num.to_i, 5)
+   #ds.each do |r|
+   #   p r
+   #end
+   page = { :prev => 0, :next => 0}
+   if !ds.first_page?
+      page[:prev] = num.to_i - 1
+   end
+   if !ds.last_page?
+      page[:next] = num.to_i + 1
+   end
+   erb :bookmarks, :locals => {
+      :records => ds,
+      :user => user_name(session),
+      :page => pagenation(ds, num.to_i)
    }
 end
 
