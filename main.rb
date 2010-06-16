@@ -12,7 +12,7 @@ configure do
    # TIP:  You can get you database information
    #       from ENV['DATABASE_URI'] (see /env route below)
    DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://bookmarks.db')
-   Sequel.extension(:pagination)
+#   Sequel.extension(:pagination)
 end
 
 helpers do
