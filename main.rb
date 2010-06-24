@@ -125,10 +125,7 @@ get '/rss' do
       bookmarks.each do |bookmark|
          item = maker.items.new_item
          item.link = bookmark[:url]
-         # [note] item.authors is not undefined in heroku....
-         #item.authors.new_author do |author|
-         #   author.name = bookmark[:name]
-         #end
+         item.dc_creator = bookmark[:name]
          item.title = bookmark[:title]	#TODO escape
          #item.date = m.modified_at
          item.description = bookmark[:note]	#TODO escape
