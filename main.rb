@@ -3,7 +3,11 @@ require 'rubygems'
 require 'sinatra'
 require 'sequel'
 
-enable :sessions
+use Rack::Session::Cookie, :key => 'kodama',
+#                           :domain => 'foo.com',
+                           :path => '/',
+                           :expire_after => 2592000, # In seconds
+                           :secret => 'change_me'
 
 #$LOAD_PATH.unshift(File.dirname(__FILE__) + '/vendor/json_pure')
 #require 'json/pure'
@@ -157,4 +161,8 @@ post '/user/new' do
       :password => params[:password],
    })
    redirect '/login'
+end
+
+get '/:user/edit' do |user_id|
+   "edit #{user_id}"
 end
