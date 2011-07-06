@@ -126,13 +126,12 @@ get '/edit/:id' do |bookmark_id|
 end
 
 post '/edit/:id' do |bookmark_id|
-   DB[:bookmarks].filter({:id => bookmark_id} & {:user_id => user_name(session)[:id]})
-      .update({
-                 :title => params[:title],
-                 :url => params[:url],
-                 :tag => params[:tag],
-                 :note => params[:note]
-              })
+   DB[:bookmarks].filter({:id => bookmark_id} & {:user_id => user_name(session)[:id]}).update({
+                                                                                                 :title => params[:title],
+                                                                                                 :url => params[:url],
+                                                                                                 :tag => params[:tag],
+                                                                                                 :note => params[:note]
+                                                                                              })
    redirect '/'
 end
 
