@@ -195,9 +195,9 @@ get '/user/edit/:id' do |user_id|
 end
 
 get '/:user' do |user|
-   #"viewing user #{user}'s page"
+   puts "viewing user #{user}'s page"
    ds = DB[:bookmarks].graph(:users, :id => :user_id).where(:users__name => user).order(:bookmarks__id.desc).paginate(1, PER_PAGE)
-   #dbg(ds)
+   dbg(ds)
    erb :users_bookmarks, :locals => {
       :records => ds,
       :page_user => user,
