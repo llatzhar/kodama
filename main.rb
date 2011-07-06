@@ -2,6 +2,7 @@ require 'rss'
 require 'rubygems'
 require 'sinatra'
 require 'sequel'
+require 'sequel/extensions/pagination'
 
 use Rack::Session::Cookie, :key => 'kodama',
 #                           :domain => 'foo.com',
