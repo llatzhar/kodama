@@ -6,12 +6,12 @@
 </head>
 <body>
 	<h1>Edit Bookmark</h1>
-	<form method="post" action="/edit/<%= bookmark[:id]%>">
+	<form method="post" action="/edit/<%= record[:bookmarks][:id]%>">
 		<dl>
-		<dt>title <input type="text" name="title" value="<%= bookmark[:title] %>"></dt>
-		<dt>url <input type="text" name="url" value="<%= bookmark[:url] %>"></dt>
-		<dt>tag <input type="text" name="tag" value="<%= bookmark[:tag] %>"></dt>
-		<dt>note<input type="text" name="note" value="<%= bookmark[:note] %>"></dt>
+		<dt>title <input type="text" name="title" value="<%= record[:bookmarks][:title] %>"></dt>
+		<dt>url <input type="text" name="url" value="<%= record[:bookmarks][:url] %>"></dt>
+		<dt>tag <input type="text" name="tag" value="<%= record[:bookmarks][:tag] %>"></dt>
+		<dt>note<input type="text" name="note" value="<%= record[:bookmarks][:note] %>"></dt>
 		<dt><input type="submit" value="edit"></dt>
 		</dl>
 	</form>

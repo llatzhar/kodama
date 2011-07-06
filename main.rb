@@ -51,13 +51,21 @@ helpers do
       end
       page
    end
+
+   def dbg(ds)
+      puts ds.sql
+      ds.each do |r|
+         p r
+      end
+   end
 end
 
 get '/' do
-   ds = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(1, 5)
-   #ds.each do |r|
-   #   p r
-   #end
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(1, 5)
+   #dbg(ds)
+   ds.each do |r|
+      p r
+   end
    erb :bookmarks, :locals => {
       :records => ds,
       :user => user_name(session),
@@ -66,10 +74,8 @@ get '/' do
 end
 
 get '/page/:page' do |num|
-   ds = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(num.to_i, 5)
-   #ds.each do |r|
-   #   p r
-   #end
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(num.to_i, 5)
+   #dbg(ds)
    page = { :prev => 0, :next => 0}
    if !ds.first_page?
       page[:prev] = num.to_i - 1
@@ -118,10 +124,10 @@ end
 
 get '/edit/:id' do |bookmark_id|
    user = user_name(session)
-   ds = DB[:bookmarks].left_outer_join(:users, :bookmarks__id => :user_id).filter({:bookmarks__id => bookmark_id} & {:users__id => user[:id]})
-   #p ds
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).filter({:bookmarks__id => bookmark_id} & {:bookmarks__user_id => user[:id]})
+   dbg(ds)
    erb :edit_bookmark, :locals => {
-      :bookmark => ds.first
+      :record => ds.first
    }
 end
 
@@ -144,16 +150,17 @@ get '/rss' do
       maker.channel.link = "http://kodama.heroku.com/"
 
       maker.items.do_sort = true
-      bookmarks = DB[:bookmarks].left_outer_join(:users, :id => :user_id).order(:bookmarks__id.desc).limit(30)
-      bookmarks.each do |bookmark|
+      bookmarks = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).limit(30)
+      bookmarks.each do |ds|
+         p ds
          item = maker.items.new_item
-         item.link = bookmark[:url]
+         item.link = ds[:bookmarks][:url]
          item.dc_creators.new_creator do |creator|
-            creator.value = bookmark[:name]
+            creator.value = ds[:users][:name]
          end
-         item.title = bookmark[:title]	#TODO escape
+         item.title = ds[:bookmarks][:title]	#TODO escape
          #item.date = m.modified_at
-         item.description = bookmark[:note]	#TODO escape
+         item.description = ds[:bookmarks][:note]	#TODO escape
       end
    end
    rss.to_s
