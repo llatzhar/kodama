@@ -116,6 +116,26 @@ post '/new' do
    redirect '/'
 end
 
+get '/edit/:id' do |bookmark_id|
+   user = user_name(session)
+   ds = DB[:bookmarks].left_outer_join(:users, :bookmarks__id => :user_id).filter({:bookmarks__id => bookmark_id} & {:users__id => user[:id]})
+   #p ds
+   erb :edit_bookmark, :locals => {
+      :bookmark => ds.first
+   }
+end
+
+post '/edit/:id' do |bookmark_id|
+   DB[:bookmarks].filter({:id => bookmark_id} & {:user_id => user_name(session)[:id]})
+      .update({
+                 :title => params[:title],
+                 :url => params[:url],
+                 :tag => params[:tag],
+                 :note => params[:note]
+              })
+   redirect '/'
+end
+
 get '/rss' do
    rss = RSS::Maker.make("2.0") do |maker|
 
@@ -163,6 +183,6 @@ post '/user/new' do
    redirect '/login'
 end
 
-get '/:user/edit' do |user_id|
+get '/user/edit/:id' do |user_id|
    "edit #{user_id}"
 end

@@ -20,7 +20,7 @@
 			<div class="meta">tag: <%= r[:tag] %></div>
 			<div class="description">note: <%= r[:note] %></div>
 			<div class="description">user: <%= r[:name] %></div>
-			<div><a href="/<%= r[:id] %>/edit">edit</a> | <a href="/<%= r[:id] %>/delete">delete</a></div>
+			<div><a href="/edit/<%= r[:id] %>">edit</a> | <a href="/<%= r[:id] %>/delete">delete</a></div>
 		</div>
 	<% end %>
 	</div>

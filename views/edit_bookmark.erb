@@ -2,36 +2,19 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<link rel="stylesheet" type="text/css" href="../../tesso.css"/>
-	<title>Edit user | tesso</title>
+	<title>Edit Bookmark | kodama</title>
 </head>
 <body>
-	<div id="container">
-		<div id="content_container">
-			<div id="content">
-				<h1>Edit User</h1>
-				<form method="post" action="./edit" class="user_form">
-					<label for="user_name">Name</label>
-					<input type="text" name="name" class="text_field big" value="<%= user['name'] %>">
-					<label for="user_id">User ID</label>
-					<input type="text" name="id" class="text_field big" value="<%= user['id'] %>">
-					<label for="user_pass">Password</label>
-					<input type="text" name="pass" class="text_field big" value="<%= user['pass'] %>">
-					<label for="user_note">Note</label>
-					<input type="text" name="note" class="text_field big" value="<%= user['note'] %>">
-					<div style="margin-top:30px;">
-						<input type="submit" value="Edit" class="big_button" style="margin-right:15px;">
-					</div>
-				</form>
-				<a href="../../users">back</a> <a href="../../logout">logout.</a>
-			</div>
-		</div>
-
-		<div id="footer">
-			<strong><%= constants[:footer_note] %></strong>
-			<a href="<%= constants[:footer_url] %>">Home</a>
-			<a href="help.html">Help</a>
-		</div>
-	</div>
+	<h1>Edit Bookmark</h1>
+	<form method="post" action="/edit/<%= bookmark[:id]%>">
+		<dl>
+		<dt>title <input type="text" name="title" value="<%= bookmark[:title] %>"></dt>
+		<dt>url <input type="text" name="url" value="<%= bookmark[:url] %>"></dt>
+		<dt>tag <input type="text" name="tag" value="<%= bookmark[:tag] %>"></dt>
+		<dt>note<input type="text" name="note" value="<%= bookmark[:note] %>"></dt>
+		<dt><input type="submit" value="edit"></dt>
+		</dl>
+	</form>
+	<a href="/">back</a>
 </body>
 </html>
