@@ -60,8 +60,10 @@ helpers do
    end
 end
 
+PER_PAGE = 20
+
 get '/' do
-   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(1, 5)
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(1, PER_PAGE)
    #dbg(ds)
    ds.each do |r|
       p r
@@ -74,7 +76,7 @@ get '/' do
 end
 
 get '/page/:page' do |num|
-   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(num.to_i, 5)
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(num.to_i, PER_PAGE)
    #dbg(ds)
    page = { :prev => 0, :next => 0}
    if !ds.first_page?
@@ -125,7 +127,7 @@ end
 get '/edit/:id' do |bookmark_id|
    user = user_name(session)
    ds = DB[:bookmarks].graph(:users, :id => :user_id).filter({:bookmarks__id => bookmark_id} & {:bookmarks__user_id => user[:id]})
-   dbg(ds)
+#   dbg(ds)
    erb :edit_bookmark, :locals => {
       :record => ds.first
    }
@@ -152,7 +154,6 @@ get '/rss' do
       maker.items.do_sort = true
       bookmarks = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).limit(30)
       bookmarks.each do |ds|
-         p ds
          item = maker.items.new_item
          item.link = ds[:bookmarks][:url]
          item.dc_creators.new_creator do |creator|
@@ -191,4 +192,34 @@ end
 
 get '/user/edit/:id' do |user_id|
    "edit #{user_id}"
+end
+
+get '/:user' do |user|
+   #"viewing user #{user}'s page"
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).where(:users__name => user).order(:bookmarks__id.desc).paginate(1, PER_PAGE)
+   #dbg(ds)
+   erb :users_bookmarks, :locals => {
+      :records => ds,
+      :page_user => user,
+      :user => user_name(session),
+      :page => pagenation(ds, 1)
+   }
+end
+
+get '/:user/page/:page' do |user, num|
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).where(:users__name => user).order(:bookmarks__id.desc).paginate(num.to_i, PER_PAGE)
+   #dbg(ds)
+   page = { :prev => 0, :next => 0}
+   if !ds.first_page?
+      page[:prev] = num.to_i - 1
+   end
+   if !ds.last_page?
+      page[:next] = num.to_i + 1
+   end
+   erb :bookmarks, :locals => {
+      :records => ds,
+      :page_user => user,
+      :user => user_name(session),
+      :page => pagenation(ds, num.to_i)
+   }
 end

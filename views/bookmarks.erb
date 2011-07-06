@@ -19,7 +19,11 @@
 			<div class="description">url: <%= r[:bookmarks][:url] %></div>
 			<div class="meta">tag: <%= r[:bookmarks][:tag] %></div>
 			<div class="description">note: <%= r[:bookmarks][:note] %></div>
+                    <% if r[:users][:id] == 1 %>
 			<div class="description">user: <%= r[:users][:name] %></div>
+                    <% else %>
+			<div class="description">user: <a href="/<%= r[:users][:name] %>"><%= r[:users][:name] %></a></div>
+                    <% end %>
 			<div><a href="/edit/<%= r[:bookmarks][:id] %>">edit</a> | <a href="/<%= r[:bookmarks][:id] %>/delete">delete</a></div>
 		</div>
 	<% end %>
