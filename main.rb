@@ -60,6 +60,11 @@ helpers do
          p r
       end
    end
+
+   def escape(plain)
+      CGI.escapeHTML(plain)
+   end
+
 end
 
 PER_PAGE = 20
@@ -161,9 +166,9 @@ get '/rss' do
          item.dc_creators.new_creator do |creator|
             creator.value = ds[:users][:name]
          end
-         item.title = ds[:bookmarks][:title]	#TODO escape
+         item.title = escape(ds[:bookmarks][:title])
          #item.date = m.modified_at
-         item.description = CGI.escapeHTML("tag[#{ds[:bookmarks][:tag]}] notes[#{ds[:bookmarks][:note]}]")	#TODO escape
+         item.description = escape("[#{ds[:bookmarks][:tag]}]\n#{ds[:bookmarks][:note]}")
       end
    end
    rss.to_s
