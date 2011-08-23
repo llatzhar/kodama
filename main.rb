@@ -163,7 +163,7 @@ get '/rss' do
          end
          item.title = ds[:bookmarks][:title]	#TODO escape
          #item.date = m.modified_at
-         item.description = CGI.escapeHTML("tags[#{ds[:bookmarks][:tags]}] notes[#{ds[:bookmarks][:note]}]")	#TODO escape
+         item.description = CGI.escapeHTML("tag[#{ds[:bookmarks][:tag]}] notes[#{ds[:bookmarks][:note]}]")	#TODO escape
       end
    end
    rss.to_s
