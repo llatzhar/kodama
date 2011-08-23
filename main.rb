@@ -116,6 +116,7 @@ end
 
 get '/new' do
    erb :new_bookmark, :locals => {
+      :user => user_name(session),
       :hints => params
    }
 end

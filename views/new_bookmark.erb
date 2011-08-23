@@ -6,6 +6,7 @@
 </head>
 <body>
 	<h1>New Bookmark</h1>
+	<p>You're '<%= user[:name] %>'. <a href="/login">login?</a></p>
 	<form method="post" action="/new">
 		<dl>
 		<dt>title <input type="text" name="title" value="<%= hints[:title] %>"></dt>
