@@ -17,7 +17,9 @@ use Rack::Session::Cookie, :key => 'kodama',
 configure do
    # TIP:  You can get you database information
    #       from ENV['DATABASE_URI'] (see /env route below)
-   DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://bookmarks.db')
+
+   #DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://bookmarks.db') 
+   DB = Sequel.connect(ENV['DATABASE_URL'] || 'postgres://kodama:kodama@localhost/kodama')
 end
 configure :development do
    Sequel.extension(:pagination)
@@ -148,6 +150,11 @@ post '/edit/:id' do |bookmark_id|
                                                                                                  :tag => params[:tag],
                                                                                                  :note => params[:note]
                                                                                               })
+   redirect '/'
+end
+
+get '/delete/:id' do |bookmark_id|
+   DB[:bookmarks].where(:id => bookmark_id).delete
    redirect '/'
 end
 

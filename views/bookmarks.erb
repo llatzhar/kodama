@@ -24,7 +24,7 @@
                     <% else %>
 			<div class="description">user: <a href="/<%= r[:users][:name] %>"><%= r[:users][:name] %></a></div>
                     <% end %>
-			<div><a href="/edit/<%= r[:bookmarks][:id] %>">edit</a> | <a href="/<%= r[:bookmarks][:id] %>/delete">delete</a></div>
+			<div><a href="/edit/<%= r[:bookmarks][:id] %>">edit</a> | <a href="/delete/<%= r[:bookmarks][:id] %>" onclick="return confirm('really delete?');">delete</a></div>
 		</div>
 	<% end %>
 	</div>
