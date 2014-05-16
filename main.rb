@@ -26,7 +26,7 @@ end
 
 helpers do
    def auth(user, pass)
-      ds = DB[:users].filter({:name => user} & {:password => pass})
+      ds = DB[:users].filter(Sequel.&({:name => user}, {:password => pass}))
       (ds.count > 0)
       #stop [ 401, 'Not authorized' ]
    end
@@ -139,33 +139,37 @@ end
 
 get '/edit/:id' do |bookmark_id|
    user = user_name(session)
-   ds = DB[:bookmarks].graph(:users, :id => :user_id).filter({:bookmarks__id => bookmark_id} & {:bookmarks__user_id => user[:id]})
-#   dbg(ds)
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).filter(Sequel.&({:bookmarks__id => bookmark_id}, {:bookmarks__user_id => user[:id]}))
    erb :edit_bookmark, :locals => {
       :record => ds.first
    }
 end
 
 post '/edit/:id' do |bookmark_id|
-   DB[:bookmarks].filter({:id => bookmark_id} & {:user_id => user_name(session)[:id]}).update({
-                                                                                                 :title => params[:title],
-                                                                                                 :url => params[:url],
-                                                                                                 :tag => params[:tag],
-                                                                                                 :note => params[:note]
-                                                                                              })
+   user = user_name(session)
+   ds = DB[:bookmarks].filter(Sequel.&({:id => bookmark_id}, {:user_id => user[:id]}))
+   ds.update({
+               :title => params[:title],
+               :url => params[:url],
+               :tag => params[:tag],
+               :note => params[:note]
+             })
    redirect '/'
 end
 
 get '/delete/:id' do |bookmark_id|
    user = user_name(session)
 
-   ds = DB[:bookmarks].filter({:id => bookmark_id} & {:user_id => user[:id]})
-   dbg(ds)
+   ds = DB[:bookmarks]
+   ds = ds.filter(Sequel.&({:id => bookmark_id}, {:user_id => user[:id]}))
+   #dbg(ds)
    count = ds.count
    if count < 1
       session[:message] = "no record to delete."
    else
-      DB[:bookmarks].filter({:id => bookmark_id} & {:user_id => user[:id]}).delete
+      ds = DB[:bookmarks]
+      ds = ds.filter(Sequel.&({:id => bookmark_id}, {:user_id => user[:id]}))
+      ds.delete
       session[:message] = "#{count} message(s) deleted."
    end
    redirect '/'
