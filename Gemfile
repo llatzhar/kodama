@@ -1,4 +1,9 @@
-source :rubygems
+source 'https://rubygems.org'
 
-gem 'sinatra'
+gem 'pg'
 gem 'sequel'
+gem 'sinatra'
+
+group :development do
+   gem 'sinatra-contrib', :require => 'sinatra/reloader'
+end

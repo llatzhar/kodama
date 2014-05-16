@@ -20,9 +20,8 @@ configure do
 
    #DB = Sequel.connect(ENV['DATABASE_URL'] || 'sqlite://bookmarks.db') 
    DB = Sequel.connect(ENV['DATABASE_URL'] || 'postgres://kodama:kodama@localhost/kodama')
-end
-configure :development do
-   Sequel.extension(:pagination)
+   DB.extension(:graph_each)
+   DB.extension(:pagination)
 end
 
 helpers do
@@ -41,7 +40,7 @@ helpers do
          ds = DB[:users].first(:name => session[:user])
          user[:name] = session[:user]
          user[:id] = ds[:id] 
-     end
+      end
       user
    end
    
@@ -58,6 +57,7 @@ helpers do
 
    def dbg(ds)
       puts ds.sql
+      puts "#{ds.count} records."
       ds.each do |r|
          p r
       end
@@ -72,12 +72,15 @@ end
 PER_PAGE = 20
 
 get '/' do
-   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(1, PER_PAGE)
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(Sequel.desc(:bookmarks__id)).paginate(1, PER_PAGE)
    #dbg(ds)
    ds.each do |r|
       p r
    end
+   m = session[:message]
+   session[:message] = nil
    erb :bookmarks, :locals => {
+      :message => m,
       :records => ds,
       :user => user_name(session),
       :page => pagenation(ds, 1)
@@ -85,7 +88,7 @@ get '/' do
 end
 
 get '/page/:page' do |num|
-   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).paginate(num.to_i, PER_PAGE)
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).order(Sequel.desc(:bookmarks__id)).paginate(num.to_i, PER_PAGE)
    #dbg(ds)
    page = { :prev => 0, :next => 0}
    if !ds.first_page?
@@ -154,7 +157,17 @@ post '/edit/:id' do |bookmark_id|
 end
 
 get '/delete/:id' do |bookmark_id|
-   DB[:bookmarks].where(:id => bookmark_id).delete
+   user = user_name(session)
+
+   ds = DB[:bookmarks].filter({:id => bookmark_id} & {:user_id => user[:id]})
+   dbg(ds)
+   count = ds.count
+   if count < 1
+      session[:message] = "no record to delete."
+   else
+      DB[:bookmarks].filter({:id => bookmark_id} & {:user_id => user[:id]}).delete
+      session[:message] = "#{count} message(s) deleted."
+   end
    redirect '/'
 end
 
@@ -167,7 +180,7 @@ get '/rss' do
       maker.channel.link = "http://kodama.heroku.com/"
 
       maker.items.do_sort = true
-      bookmarks = DB[:bookmarks].graph(:users, :id => :user_id).order(:bookmarks__id.desc).limit(30)
+      bookmarks = DB[:bookmarks].graph(:users, :id => :user_id).order(Sequel.desc(:bookmarks__id)).limit(30)
       bookmarks.each do |ds|
          item = maker.items.new_item
          item.link = ds[:bookmarks][:url]
@@ -211,7 +224,7 @@ end
 
 get '/:user' do |user|
    puts "viewing user #{user}'s page"
-   ds = DB[:bookmarks].graph(:users, :id => :user_id).where(:users__name => user).order(:bookmarks__id.desc).paginate(1, PER_PAGE)
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).where(:users__name => user).order(Sequel.desc(:bookmarks__id)).paginate(1, PER_PAGE)
    dbg(ds)
    erb :users_bookmarks, :locals => {
       :records => ds,
@@ -222,7 +235,7 @@ get '/:user' do |user|
 end
 
 get '/:user/page/:page' do |user, num|
-   ds = DB[:bookmarks].graph(:users, :id => :user_id).where(:users__name => user).order(:bookmarks__id.desc).paginate(num.to_i, PER_PAGE)
+   ds = DB[:bookmarks].graph(:users, :id => :user_id).where(:users__name => user).order(Sequel.desc(:bookmarks__id)).paginate(num.to_i, PER_PAGE)
    #dbg(ds)
    page = { :prev => 0, :next => 0}
    if !ds.first_page?

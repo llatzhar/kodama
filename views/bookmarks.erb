@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link href='/style.css' media='screen' rel='stylesheet' type='text/css'>
 	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss">
 	<title>Bookmarks | kodama</title>
 </head>
@@ -12,6 +13,10 @@
 		<dt>you are <%= user[:name] %></dt>
 		<dt><a href="/user/new">sign up</a></dt>
 	</dl>
+	<div class="message">
+		<p class="message"><%= message %></p>
+	</div>
+
 	<div class="autopagerize_page_element">
 	<% records.each do |r| %>
 		<div class="xforkentry">
