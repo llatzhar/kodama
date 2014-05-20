@@ -1,8 +1,35 @@
 div.message {
-  background: red;
+    background: red;
 }
 
 p.message {
-  color: white;
+    color: white;
 }
 
+div.entry {
+    margin-left: 10px;
+    margin-top: 50px;
+}
+
+a:link, a:visited {
+    color: #0080FF;
+}
+
+div.header {
+    text-align: right;
+}
+
+ul.headerlist {
+    list-style:none;
+}
+
+ul.headerlist li {
+    margin-right: 1em;
+    padding-left: 1em;
+    float: right;
+    border-left: solid 1px;
+}
+
+.clear {
+    clear: left;
+}

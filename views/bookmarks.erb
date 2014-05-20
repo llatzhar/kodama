@@ -8,18 +8,23 @@
 </head>
 <body>
 	<h1>Bookmarks</h1>
-	<dl>
-		<dt><a href="/login">login</a></dt>
-		<dt>you are <%= user[:name] %></dt>
-		<dt><a href="/user/new">sign up</a></dt>
-	</dl>
+
+	<div class="header">
+	  <ul class="headerlist">
+	    <li><a href="/login">login</a></li>
+	    <li>you are <%= user[:name] %></li>
+	    <li><a href="/user/new">sign up</a></li>
+	  </ul>
+	  <div class="clear"></div>
+	</div>
+
 	<div class="message">
 		<p class="message"><%= message %></p>
 	</div>
 
 	<div class="autopagerize_page_element">
 	<% records.each do |r| %>
-		<div class="xforkentry">
+		<div class="xforkentry entry">
 			<div><a class="taggedlink" href="<%= r[:bookmarks][:url] %>"><%= r[:bookmarks][:title] %></a></div>
 			<div class="description">url: <%= r[:bookmarks][:url] %></div>
 			<div class="meta">tag: <%= r[:bookmarks][:tag] %></div>

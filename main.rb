@@ -97,7 +97,10 @@ get '/page/:page' do |num|
    if !ds.last_page?
       page[:next] = num.to_i + 1
    end
+   m = session[:message]
+   session[:message] = nil
    erb :bookmarks, :locals => {
+      :message => m,
       :records => ds,
       :user => user_name(session),
       :page => pagenation(ds, num.to_i)
