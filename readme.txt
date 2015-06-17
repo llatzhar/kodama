@@ -1,3 +1,5 @@
+upgrade to cedar-14
+
 [migration]
 sequel sqlite://bookmarks.db -m migrate/ -M 002
 
